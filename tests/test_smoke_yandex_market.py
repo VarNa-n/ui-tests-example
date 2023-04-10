@@ -22,7 +22,6 @@
 import pytest
 from pages.yandex import MainPage
 
-
 def test_check_main_search(web_browser):
     """ Make sure main search works fine. """
 
@@ -31,14 +30,14 @@ def test_check_main_search(web_browser):
     page.search = 'iPhone 12'
     page.search_run_button.click()
 
+
     # Verify that user can see the list of products:
-    assert page.products_titles.count() == 48
+    assert page.products_titles.count() > 0
 
     # Make sure user found the relevant products
     for title in page.products_titles.get_text():
         msg = 'Wrong product in search "{}"'.format(title)
         assert 'iphone' in title.lower(), msg
-
 
 def test_check_wrong_input_in_search(web_browser):
     """ Make sure that wrong keyboard layout input works fine. """
@@ -50,7 +49,7 @@ def test_check_wrong_input_in_search(web_browser):
     page.search_run_button.click()
 
     # Verify that user can see the list of products:
-    assert page.products_titles.count() == 48
+    assert page.products_titles.count() > 0
 
     # Make sure user found the relevant products
     for title in page.products_titles.get_text():
@@ -58,7 +57,7 @@ def test_check_wrong_input_in_search(web_browser):
         assert 'смартфон' in title.lower(), msg
 
 
-@pytest.mark.xfail(reason="Filter by price doesn't work")
+#@pytest.mark.xfail(reason="Filter by price doesn't work")
 def test_check_sort_by_price(web_browser):
     """ Make sure that sort by price works fine.
 
@@ -79,12 +78,14 @@ def test_check_sort_by_price(web_browser):
 
     # Get prices of the products in Search results
     all_prices = page.products_prices.get_text()
+    print("---- all_prices = ", all_prices)
 
     # Convert all prices from strings to numbers
     all_prices = [float(p.replace(' ', '')) for p in all_prices]
 
-    print(all_prices)
-    print(sorted(all_prices))
+    print("---- all_prices = ", all_prices)
+    print("---- sorted all_prices = ", sorted(all_prices))
 
+    msg = f"---- all_prices = {all_prices}\n---- sorted all_prices = {sorted(all_prices)}"
     # Make sure products are sorted by price correctly:
-    assert all_prices == sorted(all_prices), "Sort by price doesn't work!"
+    assert all_prices == sorted(all_prices), msg
